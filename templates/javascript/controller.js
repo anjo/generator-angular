@@ -8,4 +8,4 @@ function <%= classname %>Ctrl($scope) {
     ];
 }
 
-angular.module('<%= modulename %>').controller(<%= classname %>Ctrl);
+angular.module('<%= modulename %>').controller('<%= classname %>Ctrl', <%= classname %>Ctrl);
