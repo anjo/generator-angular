@@ -1,4 +1,18 @@
-generator-angular
-=================
+AngularJS generator for Yeoman
 
-Angular Generator for yeoman with different project structure and without coffescript support
+Based on https://github.com/angular/angular-seed/
+
+Usage:
+
+`yeoman init angular`
+
+Available generators:
+
+angular:controller
+angular:directive
+angular:service
+angular:all
+
+Typical output:
+
+TODO

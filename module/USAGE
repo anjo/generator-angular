@@ -1,0 +1,8 @@
+Description:
+    Creates a new Angular module
+
+Example:
+    yeoman init angular:module Thing [--coffee]
+
+    This will create:
+        app/scripts/modules/thing/index.js
