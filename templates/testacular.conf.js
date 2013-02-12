@@ -7,15 +7,15 @@ basePath = '';
 
 // list of files / patterns to load in the browser
 files = [
-  JASMINE,
-  JASMINE_ADAPTER,
-  'app/components/angular/angular.js',
-  'app/components/angular/angular-mocks.js',
-  'app/scripts/*.js',
-  'app/scripts/*/module.js',
-  'app/scripts/**/*.js',
-  'test/mock/**/*.js',
-  'test/spec/**/*.js'
+    JASMINE,
+    JASMINE_ADAPTER,
+    'app/components/angular/angular.js',
+    'app/components/angular/angular-mocks.js',
+    'app/scripts/*.js',
+    'app/scripts/*/module.js',
+    'app/scripts/**/*.js',
+    'test/mock/**/*.js',
+    'test/spec/**/*.js'
 ];
 
 
