@@ -5,8 +5,12 @@ module.exports = function( grunt ) {
     //
     // https://github.com/cowboy/grunt/blob/master/docs/getting_started.md
     //
+    grunt.registerTask('coffee', 'insert dependency flags and templates', function () {
+    });
+    grunt.registerTask('compass', 'insert dependency flags and templates', function () {
+    });
 
-	// angular specific stuff
+    // angular specific stuff
     grunt.registerTask('ngmin', 'insert dependency flags and templates', function () {
         var jsFiles = grunt.config("ngmin").js || [];
         var viewFiles = grunt.config("ngmin").views || [];
@@ -22,22 +26,50 @@ module.exports = function( grunt ) {
                 });
             });
         });
-        var views = [];
-        viewFiles.forEach(function(pattern) {
-            var files = grunt.file.expandFiles(pattern)
-            files.forEach(function(file) {
-                var content = grunt.file.read(file);
-                views.push(["<script id='",file,"' type='text/ng-template'>", content,"</script>"].join(""));
-                grunt.log.write("processed: " + file +"\n");
+    });
+
+    grunt.registerMultiTask('html2js', 'Generate js version of html template.', function() {
+        var TPL = '';
+        var single = true; // do you want one file per template or all in one?
+
+        if(!single) {;
+            TPL += 'angular.module("templates").run(function($templateCache) {\n';
+            TPL += '  $templateCache.put("<%= file %>",\n    "<%= content %>");\n';
+            TPL += '});\n';
+        } else {
+            TPL += '  $templateCache.put("<%= file %>",\n    "<%= content %>");\n';
+        }
+
+        var escapeContent = function(content) {
+            return content.replace(/"/g, '\\"').replace(/\n/g, '" +\n    "');
+        };
+
+        var files = grunt._watch_changed_files || grunt.file.expand(this.data);
+        var items = [];
+        files.forEach(function(file) {
+            var content = grunt.template.process(TPL, {
+                file: file.replace(/^app\//, ""),
+                content: escapeContent(grunt.file.read(file))
             });
+            items.push(content);
+            if(!single) {
+                grunt.file.write(file + '.js', content);
+            }
+
         });
-        var index = grunt.file.read("index.html");
-        index = index.replace(/<\/body>/,  views.join("") +"</body>");
-        grunt.file.write("index.html", index);
+        if(single) {
+            console.log(this, items.length)
+            var content = 'angular.module("templates", []).run(function($templateCache) {\n' +
+                items.join("\n") +
+                '});\n';
+            grunt.file.write(this.file.dest, content);
+        }
     });
 
     // Custom build order
-    grunt.registerTask('build', 'intro clean mkdirs fix_modules usemin-handler concat ngmin css min img rev usemin copy time');
+    grunt.registerTask('build',   'intro clean mkdirs html html2js                concat css                    copy      time');
+    grunt.registerTask('dist',    'intro clean mkdirs html html2js usemin-handler concat css min img rev usemin copy test time');
+    grunt.registerTask('release', 'intro clean mkdirs html html2js usemin-handler concat css min img rev usemin copy test time');
 
     // Alias the `test` task to run `testacular` instead
     grunt.registerTask('test', 'run the testacular test driver', function () {
@@ -51,12 +83,16 @@ module.exports = function( grunt ) {
     // Alias the `test` task to run `testacular` instead
     grunt.registerTask('fix_modules', 'run the testacular test driver', function () {
         var done = this.async();
-        require('fs').unlink("scripts/modules");
-        require('fs').mkdir("scripts/modules");
-        require('child_process').exec('rsync -a ../app/scripts/modules/ scripts/modules/', function (err, stdout) {
-            grunt.log.write(stdout);
-            done(err);
-        });
+        try {
+            require('fs').unlink("scripts/modules");
+            require('fs').mkdir("scripts/modules");
+            require('child_process').exec('rsync -a ../app/scripts/modules/ scripts/modules/', function (err, stdout) {
+                grunt.log.write(stdout);
+                done(err);
+            });
+        } catch(e) {
+            done(0);
+        }
     });
 
     grunt.initConfig({
@@ -68,32 +104,34 @@ module.exports = function( grunt ) {
             dir: 'app/components'
         },
 
+        html2js: {
+            "scripts/scripts.templates.js": ['<config:src.tpl>']
+        },
+
+        concat: {
+            "scripts/scripts.js":["scripts/*.js", "scripts/**/module.js", "scripts/**/*.js", "!scripts/scripts.js", "!scripts/vendor/*.js"],
+        },
+
         ngmin:{
-            js:["scripts/scripts.js"],
-            views:["views/**/*.html", "scripts/**/*.html", "modules/**/*.html"]
+            js:["scripts/scripts.js"]
+        },
+        src: {
+            js: ['scripts/**/*.js', 'temp/**/*.js'],
+            html: ['index.html'],
+            tpl: ['scripts/**/*.html']
         },
 
         // default watch configuration
         watch: {
-            coffee: {
-                files: 'app/scripts/**/*.coffee',
-                tasks: 'coffee reload'
-            },
-            compass: {
-                files: [
-                    'app/styles/**/*.{scss,sass}'
-                ],
-                tasks: 'compass reload'
-            },
             reload: {
                 files: [
                     'app/*.html',
                     'app/styles/**/*.css',
                     'app/scripts/**/*.js',
-                    'app/views/**/*.html',
+                    'app/scripts/views/**/*.html',
                     'app/images/**/*'
                 ],
-                tasks: 'reload'
+                tasks: 'build'
             }
         },
 

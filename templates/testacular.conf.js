@@ -21,7 +21,7 @@ files = [
 
 // list of files to exclude
 exclude = [
-  
+    'app/scripts/scripts.js'
 ];
 
 

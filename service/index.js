@@ -32,14 +32,14 @@ Generator.prototype.createServiceFiles = function createServiceFiles() {
 };
 
 Generator.prototype.rewriteIndexHtml = function() {
-    var file = 'app/index.html';
+    var file = 'app/scripts/scripts.js';
     var body = grunt.file.read(file);
 
     body = angularUtils.rewrite({
-        needle: '<!-- endbuild --><!-- scripts/scripts.js -->',
+        needle: '//END',
         haystack: body,
         splicable: [
-            '<script src="' + this.serviceFile('', this.name) + '.js"></script>'
+            '"' + this.serviceFile('', this.name) + '.js' + '",'
         ]
     });
 

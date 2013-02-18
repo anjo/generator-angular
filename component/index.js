@@ -2,8 +2,8 @@ var path = require('path'),
     util = require('util'),
     grunt = require('grunt'),
     yeoman = require('../../../../'),
-    ScriptBase = require('../script-base.js');
-angularUtils = require('../util.js');
+    ScriptBase = require('../script-base.js'),
+    angularUtils = require('../util.js');
 
 module.exports = Generator;
 

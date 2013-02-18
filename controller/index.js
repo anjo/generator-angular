@@ -1,9 +1,9 @@
 
 var path = require('path'),
-  util = require('util'),
-  ScriptBase = require('../script-base.js'),
-  grunt = require('grunt'),
-  angularUtils = require('../util.js');
+    util = require('util'),
+    ScriptBase = require('../script-base.js'),
+    grunt = require('grunt'),
+    angularUtils = require('../util.js');
 
 module.exports = Generator;
 
@@ -19,21 +19,21 @@ function Generator() {
 util.inherits(Generator, ScriptBase);
 
 Generator.prototype.createControllerFiles = function createControllerFiles() {
-  this.template('controller', this.controllerFile('app', this.name));
-  this.template('spec/controller', this.controllerFile('test/spec', this.name) + "-spec");
+    this.template('controller', this.controllerFile('app', this.name));
+    this.template('spec/controller', this.controllerFile('test/spec', this.name) + "-spec");
 };
 
 Generator.prototype.rewriteIndexHtml = function() {
-  var file = 'app/index.html';
-  var body = grunt.file.read(file);
-  
-  body = angularUtils.rewrite({
-    needle: '<!-- endbuild --><!-- scripts/scripts.js -->',
-    haystack: body,
-    splicable: [
-      '<script src="' + this.controllerFile('', this.name) + '.js"></script>'
-    ]
-  });
+    var file = 'app/scripts/scripts.js';
+    var body = grunt.file.read(file);
 
-  grunt.file.write(file, body);
+    body = angularUtils.rewrite({
+        needle: '//END',
+        haystack: body,
+        splicable: [
+            '"' + this.controllerFile('', this.name) + '.js' + '",'
+        ]
+    });
+
+    grunt.file.write(file, body);
 };

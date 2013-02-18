@@ -1,4 +1,4 @@
-  
+
 var util = require('util'),
     path = require('path'),
     grunt = require('grunt'),
@@ -44,7 +44,7 @@ Generator.prototype.moduleFolder = function (prefix) {
     } else {
         if(prefix != "") {
             result = result + "/";
-         }
+        }
     }
     return result;
 }
@@ -72,5 +72,5 @@ Generator.prototype.filterFile = function (prefix, name) {
     return this.moduleFolder(prefix) + "" + this.basename;
 }
 Generator.prototype.htmlTemplate = function () {
-  yeoman.generators.Base.prototype.template.apply(this, arguments);
+    yeoman.generators.Base.prototype.template.apply(this, arguments);
 };

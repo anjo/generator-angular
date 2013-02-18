@@ -1,9 +1,9 @@
-var path = require('path'),
-  util = require('util'),
-  grunt = require('grunt'),
-  yeoman = require('../../../../'),
-  ScriptBase = require('../script-base.js');
-  angularUtils = require('../util.js');
+var   path = require('path'),
+      util = require('util'),
+      grunt = require('grunt'),
+      yeoman = require('../../../../'),
+      ScriptBase = require('../script-base.js');
+      angularUtils = require('../util.js');
 
 module.exports = Generator;
 
@@ -32,8 +32,8 @@ Generator.prototype.rewriteAppJs = function() {
     haystack: body,
     splicable: [
       ".when('/" + this.name + "', {",
-      "  templateUrl: '" + this.viewFile("", this.basename) + ".html',",
-      "  controller: '" + this.classname + "Ctrl'",
+      "     templateUrl: '" + this.viewFile("", this.basename) + ".html',",
+      "     controller: '" + this.classname + "Ctrl'",
       "})"
     ]
   });

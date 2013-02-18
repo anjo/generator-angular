@@ -22,16 +22,16 @@ Generator.prototype.createFilterFiles = function createFilterFiles() {
 };
 
 Generator.prototype.rewriteIndexHtml = function() {
-  var file = 'app/index.html';
-  var body = grunt.file.read(file);
-  
-  body = angularUtils.rewrite({
-    needle: '<!-- endbuild --><!-- scripts/scripts.js -->',
-    haystack: body,
-    splicable: [
-      '<script src="' + this.filterFile('', this.name) + '.js"></script>'
-    ]
-  });
+    var file = 'app/scripts/scripts.js';
+    var body = grunt.file.read(file);
 
-  grunt.file.write(file, body);
+    body = angularUtils.rewrite({
+        needle: '//END',
+        haystack: body,
+        splicable: [
+            '"' + this.filterFile('', this.name) + '.js' + '",'
+        ]
+    });
+
+    grunt.file.write(file, body);
 };

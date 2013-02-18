@@ -19,15 +19,15 @@ Generator.prototype.createModuleFiles = function createModuleFiles() {
   this.template('module', 'app/scripts/' + this.basename + '/module');
 };
 
-Generator.prototype.rewriteIndexHtml = function () {
-    var file = 'app/index.html';
+Generator.prototype.rewriteIndexHtml = function() {
+    var file = 'app/scripts/scripts.js';
     var body = grunt.file.read(file);
 
     body = angularUtils.rewrite({
-        needle: '<!-- endbuild --><!-- scripts/scripts.js -->',
+        needle: '//END',
         haystack: body,
         splicable: [
-            '<script src="scripts/' + this.basename + '/module.js"></script>'
+            '"' + this.basename + '/module.js' + '",'
         ]
     });
 
